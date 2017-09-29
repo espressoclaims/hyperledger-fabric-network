@@ -269,7 +269,7 @@ app.get('/getClaim/:id', function(req, res) {
 });
 
 app.post('/addClaim', function(req, res) {
-	if(Object.keys(req.query).length < 5) {
+	if(Object.keys(req.query).length != 6) {
 		res.status(400).send("Claim does not have all required information.");
 	}
 
@@ -277,15 +277,21 @@ app.post('/addClaim', function(req, res) {
 	var serviceProviderId = req.query["serviceProviderId"];
 	var employerNo = req.query["employerNo"];
 	var employeeNo = req.query["employeeNo"];
+	var isClaimable = req.query["isClaimable"];
+	var amount = req.query["amount"];
 
 	if(servicePerformed == undefined) {
-		res.send("ERROR: servicePerformed is undefined");
+		res.status(400).send("Missing: servicePerformed");
 	} else if(serviceProviderId == undefined) {
-		res.send("ERROR: serviceProviderId is undefined");
+		res.status(400).send("Missing: serviceProviderId");
 	} else if(employerNo == undefined) {
-		res.send("ERROR: employerNo is undefined");
+		res.status(400).send("Missing: employerNo");
 	} else if(employeeNo == undefined) {
-		res.send("ERROR: employeeNo is undefined");
+		res.status(400).send("Missing: employeeNo");
+	} else if(amount == undefined) {
+		res.status(400).send("Missing: amount");
+	} else if(isClaimable == undefined) {
+		res.status(400).send("Missing: isClaimable");
 	} else {
 		createClaim(servicePerformed, serviceProviderId, employerNo, employeeNo);
 		res.send("SUCCESS ? CLAIM CREATED ?");
