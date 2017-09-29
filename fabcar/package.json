@@ -9,7 +9,9 @@
     "dependencies": {
         "fabric-ca-client": "^1.0.0",
         "fabric-client": "^1.0.0",
-        "express": "latest"
+        "express": "latest",
+        "cors": "latest",
+        "body-parser": "latest"
     },
     "author": "Anthony O'Dowd",
     "license": "Apache-2.0",

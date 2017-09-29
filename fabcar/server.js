@@ -1,6 +1,11 @@
 var express = require('express');
 var fs = require('fs');
+var cors = require('cors');
+var bodyParser = require('body-parser');
 var app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
 
 var getClaims = function(id) {
 	var hfc = require('fabric-client');
@@ -85,7 +90,7 @@ var getClaims = function(id) {
 	return promise;
 }
 
-var createClaim = function(servicePerformed, serviceProviderId, employerNo, employeeNo) {
+var createClaim = function(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amount) {
 	var hfc = require('fabric-client');
 	var path = require('path');
 	var util = require('util');
@@ -214,29 +219,9 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	        err);
 	    return 'Failed to send proposal due to error: ' + err.stack ? err.stack :
 	        err;
-	}).then((response) => {
-	    if (response.status === 'SUCCESS') {
-	        console.log('Successfully sent transaction to the orderer.');
-	        return tx_id.getTransactionID();
-	    } else {
-	        console.error('Failed to order the transaction. Error code: ' + response.status);
-	        return 'Failed to order the transaction. Error code: ' + response.status;
-	    }
-	}, (err) => {
-	    console.error('Failed to send transaction due to error: ' + err.stack ? err
-	        .stack : err);
-	    return 'Failed to send transaction due to error: ' + err.stack ? err.stack :
-	        err;
 	});
-
 	return promise;
 }
-
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	next();
-});
 
 app.get('/getClaims', function(req, res) {
 	var claims = getClaims();
@@ -269,16 +254,16 @@ app.get('/getClaim/:id', function(req, res) {
 });
 
 app.post('/addClaim', function(req, res) {
-	if(Object.keys(req.query).length != 6) {
+	if(Object.keys(req.body).length != 6) {
 		res.status(400).send("Claim does not have all required information.");
 	}
 
-	var servicePerformed = req.query["servicePerformed"];
-	var serviceProviderId = req.query["serviceProviderId"];
-	var employerNo = req.query["employerNo"];
-	var employeeNo = req.query["employeeNo"];
-	var isClaimable = req.query["isClaimable"];
-	var amount = req.query["amount"];
+	var servicePerformed = req.body["servicePerformed"];
+	var serviceProviderId = req.body["serviceProviderId"];
+	var employerNo = req.body["employerNo"];
+	var employeeNo = req.body["employeeNo"];
+	var isClaimable = req.body["isClaimable"];
+	var amount = req.body["amount"];
 
 	if(servicePerformed == undefined) {
 		res.status(400).send("Missing: servicePerformed");
@@ -293,8 +278,16 @@ app.post('/addClaim', function(req, res) {
 	} else if(isClaimable == undefined) {
 		res.status(400).send("Missing: isClaimable");
 	} else {
-		createClaim(servicePerformed, serviceProviderId, employerNo, employeeNo);
-		res.send("SUCCESS ? CLAIM CREATED ?");
+		createClaim(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amount).then((response) => {
+			if (response.status === 'SUCCESS') {
+				res.send("SUCCESS: sent transaction to the orderer");
+			} else {
+				res.status(500).send("FAILURE: could not order transaction due to error: " + response.status);
+			}
+		}, (err) => {
+			res.status(500).send("FAILURE: could not send transaction due to error: " +  + err.stack ? err.stack :
+			    err);
+		});
 	}
 });
 
