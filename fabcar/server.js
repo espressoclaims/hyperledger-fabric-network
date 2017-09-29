@@ -269,8 +269,8 @@ app.get('/getClaim/:id', function(req, res) {
 });
 
 app.post('/addClaim', function(req, res) {
-	if(Object.keys(req.query).length < 4) {
-		res.send("ERROR: incomplete information");
+	if(Object.keys(req.query).length < 5) {
+		res.status(400).send("Claim does not have all required information.");
 	}
 
 	var servicePerformed = req.query["servicePerformed"];
