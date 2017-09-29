@@ -232,6 +232,12 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	return promise;
 }
 
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+});
+
 app.get('/getClaims', function(req, res) {
 	var claims = getClaims();
 	claims.then((_claims) => {
