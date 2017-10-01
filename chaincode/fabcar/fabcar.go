@@ -48,6 +48,8 @@ type Claim struct {
         ServiceProviderId string `json:"serviceProviderId"`
         EmployerNo        string `json:"employerNo"`
         EmployeeNo        string `json:"employeeNo"`
+				IsClaimable				string `json:"IsClaimable"`
+				Amount						string `json:"Amount"`
 }
 
 /*
@@ -94,7 +96,7 @@ func (s *SmartContract) queryClaim(APIstub shim.ChaincodeStubInterface, args []s
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
         claims := []Claim{
-                  Claim{ServicePerformed: "Teeth whitening", ServiceProviderId: "123", EmployerNo: "123a", EmployeeNo: "123b"},
+                  Claim{ServicePerformed: "Teeth whitening", ServiceProviderId: "123", EmployerNo: "123a", EmployeeNo: "123b", IsClaimable: "true", Amount: "87.5"},
         }
 
 	i := 0
