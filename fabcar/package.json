@@ -11,7 +11,8 @@
         "fabric-client": "^1.0.0",
         "express": "latest",
         "cors": "latest",
-        "body-parser": "latest"
+        "body-parser": "latest",
+        "uuid": "latest"
     },
     "author": "Anthony O'Dowd",
     "license": "Apache-2.0",

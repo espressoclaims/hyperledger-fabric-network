@@ -129,6 +129,7 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	    targets.push(peerObj);
 	    return;
 	}).then(() => {
+			var uuid = require('uuid/v4');
 	    tx_id = client.newTransactionID();
 	    console.log("Assigning transaction_id: ", tx_id._transaction_id);
 	    // createClaim - requires 5 args, ex: args: ['CLAIM11', '123adf', 'ews34124', 'af1111', '1111'],
@@ -138,7 +139,7 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	        targets: targets,
 	        chaincodeId: options.chaincode_id,
 	        fcn: 'createClaim',
-	        args: ['CLAIM11', servicePerformed, serviceProviderId, employerNo, employeeNo],
+	        args: [uuid(), servicePerformed, serviceProviderId, employerNo, employeeNo],
 	        chainId: options.channel_id,
 	        txId: tx_id
 	    };
