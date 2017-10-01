@@ -125,8 +125,8 @@ func (s *SmartContract) createClaim(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) queryAllClaims(APIstub shim.ChaincodeStubInterface) sc.Response {
 
-	startKey := "CLAIM0"
-	endKey := "CLAIM999"
+	startKey := ""
+	endKey := ""
 
 	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
 	if err != nil {
