@@ -139,7 +139,7 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	        targets: targets,
 	        chaincodeId: options.chaincode_id,
 	        fcn: 'createClaim',
-	        args: [uuid(), servicePerformed, serviceProviderId, employerNo, employeeNo],
+	        args: [uuid(), servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable.toString(), amount.toString()],
 	        chainId: options.channel_id,
 	        txId: tx_id
 	    };

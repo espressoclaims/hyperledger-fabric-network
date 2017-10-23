@@ -113,11 +113,11 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 func (s *SmartContract) createClaim(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+	if len(args) != 7 {
+		return shim.Error("Incorrect number of arguments. Expecting 7")
 	}
 
-        var claim = Claim{ServicePerformed: args[1], ServiceProviderId: args[2], EmployerNo: args[3], EmployeeNo: args[4]}
+	var claim = Claim{ServicePerformed: args[1], ServiceProviderId: args[2], EmployerNo: args[3], EmployeeNo: args[4], IsClaimable: args[5], Amount: args[6]}
 
 	claimAsBytes, _ := json.Marshal(claim)
 	APIstub.PutState(args[0], claimAsBytes)
