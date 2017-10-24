@@ -48,8 +48,8 @@ type Claim struct {
         ServiceProviderId string `json:"serviceProviderId"`
         EmployerNo        string `json:"employerNo"`
         EmployeeNo        string `json:"employeeNo"`
-				IsClaimable				string `json:"IsClaimable"`
-				Amount						string `json:"Amount"`
+				IsClaimable				string `json:"isClaimable"`
+				Amount						string `json:"amount"`
 }
 
 /*
