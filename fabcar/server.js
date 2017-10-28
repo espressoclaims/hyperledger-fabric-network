@@ -90,7 +90,7 @@ var getClaims = function(id) {
 	return promise;
 }
 
-var createClaim = function(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amount) {
+var createClaim = function(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amountClaimed, amountProcessed) {
 	var hfc = require('fabric-client');
 	var path = require('path');
 	var util = require('util');
@@ -139,7 +139,7 @@ var createClaim = function(servicePerformed, serviceProviderId, employerNo, empl
 	        targets: targets,
 	        chaincodeId: options.chaincode_id,
 	        fcn: 'createClaim',
-	        args: [uuid(), servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable.toString(), amount.toString()],
+	        args: [uuid(), servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable.toString(), amountClaimed.toString(), amountProcessed.toString()],
 	        chainId: options.channel_id,
 	        txId: tx_id
 	    };
@@ -255,8 +255,9 @@ app.get('/getClaim/:id', function(req, res) {
 });
 
 app.post('/addClaim', function(req, res) {
-	if(Object.keys(req.body).length != 6) {
+	if(Object.keys(req.body).length != 8) {
 		res.status(400).send("Claim does not have all required information.");
+		return;
 	}
 
 	var servicePerformed = req.body["servicePerformed"];
@@ -264,7 +265,8 @@ app.post('/addClaim', function(req, res) {
 	var employerNo = req.body["employerNo"];
 	var employeeNo = req.body["employeeNo"];
 	var isClaimable = req.body["isClaimable"];
-	var amount = req.body["amount"];
+	var amountClaimed = req.body["amountClaimed"];
+	var amountProcessed = req.body["amountProcessed"];
 
 	if(servicePerformed == undefined) {
 		res.status(400).send("Missing: servicePerformed");
@@ -274,12 +276,14 @@ app.post('/addClaim', function(req, res) {
 		res.status(400).send("Missing: employerNo");
 	} else if(employeeNo == undefined) {
 		res.status(400).send("Missing: employeeNo");
-	} else if(amount == undefined) {
-		res.status(400).send("Missing: amount");
+	} else if(amountClaimed == undefined) {
+		res.status(400).send("Missing: amountClaimed");
 	} else if(isClaimable == undefined) {
 		res.status(400).send("Missing: isClaimable");
+	} else if (amountProcessed == undefined) {
+		res.status(400).send("Missing: amountProcessed");
 	} else {
-		createClaim(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amount).then((response) => {
+		createClaim(servicePerformed, serviceProviderId, employerNo, employeeNo, isClaimable, amountClaimed, amountProcessed).then((response) => {
 			if (response.status === 'SUCCESS') {
 				res.send("SUCCESS: sent transaction to the orderer");
 			} else {

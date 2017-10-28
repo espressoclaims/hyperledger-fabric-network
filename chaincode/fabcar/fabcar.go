@@ -49,7 +49,8 @@ type Claim struct {
         EmployerNo        string `json:"employerNo"`
         EmployeeNo        string `json:"employeeNo"`
 				IsClaimable				string `json:"isClaimable"`
-				Amount						string `json:"amount"`
+				AmountClaimed			string `json:"amountClaimed"`
+				AmountProcessed		string `json:"amountProcessed"`
 }
 
 /*
@@ -95,9 +96,9 @@ func (s *SmartContract) queryClaim(APIstub shim.ChaincodeStubInterface, args []s
 }
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-        claims := []Claim{
-                  Claim{ServicePerformed: "Teeth whitening", ServiceProviderId: "123", EmployerNo: "123a", EmployeeNo: "123b", IsClaimable: "true", Amount: "87.5"},
-        }
+  claims := []Claim{
+		Claim{ServicePerformed: "Acupuncture", ServiceProviderId: "123abc", EmployerNo: "456cde", EmployeeNo: "abc123", IsClaimable: "true", AmountClaimed: "87.5", AmountProcessed: "87.5"},
+  }
 
 	i := 0
 	for i < len(claims) {
@@ -113,11 +114,11 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 func (s *SmartContract) createClaim(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
-	if len(args) != 7 {
-		return shim.Error("Incorrect number of arguments. Expecting 7")
+	if len(args) != 8 {
+		return shim.Error("Incorrect number of arguments. Expecting 8")
 	}
 
-	var claim = Claim{ServicePerformed: args[1], ServiceProviderId: args[2], EmployerNo: args[3], EmployeeNo: args[4], IsClaimable: args[5], Amount: args[6]}
+	var claim = Claim{ServicePerformed: args[1], ServiceProviderId: args[2], EmployerNo: args[3], EmployeeNo: args[4], IsClaimable: args[5], AmountClaimed: args[6], AmountProcessed: args[7]}
 
 	claimAsBytes, _ := json.Marshal(claim)
 	APIstub.PutState(args[0], claimAsBytes)
