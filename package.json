@@ -1,0 +1,23 @@
+{
+  "name": "espresso-claims",
+  "version": "1.0.0",
+  "description": "Blockchain network for Espresso Claims",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "cd fabcar && sh startFabric.sh && npm install && npm start && cd ../"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/espressoclaims/hyperledger-fabric-network.git"
+  },
+  "keywords": [
+    "blockchain"
+  ],
+  "author": "Naba S. Siddiqui",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/espressoclaims/hyperledger-fabric-network/issues"
+  },
+  "homepage": "https://github.com/espressoclaims/hyperledger-fabric-network#readme"
+}
